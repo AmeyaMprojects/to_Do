@@ -1,8 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components"; // Import createGlobalStyle
 import useDarkMode from "./useDarkMode"; // Import the custom hook
 import { FaMoon, FaSun, FaTrash } from "react-icons/fa";
+
+// Create Global Styles
+const GlobalStyles = createGlobalStyle`
+  /* Apply dark mode to the body */
+  body {
+    background-color: ${(props) => (props.$isDark ? "#121212" : "#fff")};
+    color: ${(props) => (props.$isDark ? "#fff" : "#000")};
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Style the scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: ${(props) => (props.$isDark ? "#1e1e1e" : "#f9f9f9")};
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${(props) => (props.$isDark ? "#444" : "#888")};
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${(props) => (props.$isDark ? "#666" : "#aaa")};
+  }
+`;
 
 // Styled Components for Minimalist Design
 const AppContainer = styled.div`
@@ -128,13 +156,13 @@ export default function App() {
       setTasks([]);
     }
   }, []);
-  
+
   useEffect(() => {
     if (tasks.length > 0) {
       localStorage.setItem("tasks", JSON.stringify(tasks));
     }
   }, [tasks]);
-  
+
   // Add Task
   const handleAddTask = () => {
     if (inputValue.trim() === "") return;
@@ -162,75 +190,80 @@ export default function App() {
   };
 
   return (
-    <AppContainer $isDark={isDarkMode}>
-      <Header $isDark={isDarkMode}>Minimalist To-Do</Header>
-      <DarkModeToggle
-        $isDark={isDarkMode}
-        onClick={toggleDarkMode}
-        title="Toggle Dark Mode"
-      >
-        {isDarkMode ? <FaMoon /> : <FaSun />}
-      </DarkModeToggle>
-      <InputContainer>
-        <TaskInput
-          type="text"
-          placeholder="Add a task..."
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleAddTask();
-            }
-          }}
+    <>
+      {/* Apply Global Styles */}
+      <GlobalStyles $isDark={isDarkMode} />
+
+      <AppContainer $isDark={isDarkMode}>
+        <Header $isDark={isDarkMode}>Minimalist To-Do</Header>
+        <DarkModeToggle
           $isDark={isDarkMode}
-        />
-        <AddButton onClick={handleAddTask} $isDark={isDarkMode}>
-          Add
-        </AddButton>
-      </InputContainer>
-      <TaskList>
-        <AnimatePresence>
-          {tasks
-            .sort((a, b) => a.completed - b.completed) // Sort tasks: incomplete first, completed last
-            .map((task) => (
-              <TaskItem
-                key={task.id} // Use the unique ID
-                variants={itemVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                layout // Enable Framer Motion layout animations
-                $isDark={isDarkMode}
-              >
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <input
-                    type="checkbox"
-                    checked={task.completed}
-                    onChange={() => handleToggleTaskCompletion(task.id)}
-                    style={{
-                      marginRight: "10px",
-                      accentColor: isDarkMode ? "#fff" : "#000",
-                    }}
-                  />
-                  <span
-                    style={{
-                      textDecoration: task.completed ? "line-through" : "none",
-                      color: task.completed ? (isDarkMode ? "#aaa" : "#888") : "inherit",
-                    }}
-                  >
-                    {task.text}
-                  </span>
-                </div>
-                <DeleteButton
-                  onClick={() => handleDeleteTask(task.id)}
+          onClick={toggleDarkMode}
+          title="Toggle Dark Mode"
+        >
+          {isDarkMode ? <FaMoon /> : <FaSun />}
+        </DarkModeToggle>
+        <InputContainer>
+          <TaskInput
+            type="text"
+            placeholder="Add a task..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleAddTask();
+              }
+            }}
+            $isDark={isDarkMode}
+          />
+          <AddButton onClick={handleAddTask} $isDark={isDarkMode}>
+            Add
+          </AddButton>
+        </InputContainer>
+        <TaskList>
+          <AnimatePresence>
+            {tasks
+              .sort((a, b) => a.completed - b.completed) // Sort tasks: incomplete first, completed last
+              .map((task) => (
+                <TaskItem
+                  key={task.id} // Use the unique ID
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  layout // Enable Framer Motion layout animations
                   $isDark={isDarkMode}
                 >
-                  <FaTrash />
-                </DeleteButton>
-              </TaskItem>
-            ))}
-        </AnimatePresence>
-      </TaskList>
-    </AppContainer>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => handleToggleTaskCompletion(task.id)}
+                      style={{
+                        marginRight: "10px",
+                        accentColor: isDarkMode ? "#fff" : "#000",
+                      }}
+                    />
+                    <span
+                      style={{
+                        textDecoration: task.completed ? "line-through" : "none",
+                        color: task.completed ? (isDarkMode ? "#aaa" : "#888") : "inherit",
+                      }}
+                    >
+                      {task.text}
+                    </span>
+                  </div>
+                  <DeleteButton
+                    onClick={() => handleDeleteTask(task.id)}
+                    $isDark={isDarkMode}
+                  >
+                    <FaTrash />
+                  </DeleteButton>
+                </TaskItem>
+              ))}
+          </AnimatePresence>
+        </TaskList>
+      </AppContainer>
+    </>
   );
 }
