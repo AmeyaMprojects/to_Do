@@ -116,27 +116,25 @@ export default function App() {
   // Load tasks from local storage on mount
   useEffect(() => {
     try {
-      const savedTasks = JSON.parse(localStorage.getItem("tasks"));
-      console.log("Raw data from localStorage:", savedTasks); // Log raw data
+      const saved = localStorage.getItem("tasks");
+      const savedTasks = saved ? JSON.parse(saved) : [];
       if (Array.isArray(savedTasks)) {
-        console.log("Valid tasks found. Setting tasks state:", savedTasks);
         setTasks(savedTasks);
       } else {
-        console.warn("No valid tasks found in localStorage. Initializing with empty array.");
-        setTasks([]); // Initialize with an empty array
+        setTasks([]);
       }
     } catch (error) {
       console.error("Error loading tasks from localStorage:", error);
-      setTasks([]); // Fallback to an empty array
+      setTasks([]);
     }
   }, []);
-
-  // Save tasks to local storage whenever they change
+  
   useEffect(() => {
-    console.log("Saving tasks to localStorage:", tasks); // Debugging
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    if (tasks.length > 0) {
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
   }, [tasks]);
-
+  
   // Add Task
   const handleAddTask = () => {
     if (inputValue.trim() === "") return;
