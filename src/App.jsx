@@ -151,8 +151,8 @@ const PortfolioLink = styled.a`
 `;
 
 const PortfolioImage = styled.img`
-  width: 50px;
-  height: 40px;
+  width: 40px;
+  height: 30px;
   
   margin-right: 10px;
   transition: border-color 0.3s ease;
