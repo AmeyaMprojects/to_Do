@@ -129,6 +129,35 @@ const DarkModeToggle = styled.button`
   color: ${(props) => (props.$isDark ? "#fff" : "#000")};
 `;
 
+const PortfolioFooter = styled.div`
+  margin-top: 40px;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const PortfolioLink = styled.a`
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: ${(props) => (props.$isDark ? "#fff" : "#000")};
+  font-size: 0.9rem;
+  transition: opacity 0.3s ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+
+const PortfolioImage = styled.img`
+  width: 50px;
+  height: 40px;
+  
+  margin-right: 10px;
+  transition: border-color 0.3s ease;
+`;
+
 // Animation Variants for Ink Effect
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -263,6 +292,22 @@ export default function App() {
               ))}
           </AnimatePresence>
         </TaskList>
+        
+        <PortfolioFooter>
+          <PortfolioLink
+            href="https://ameyamhatre.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            $isDark={isDarkMode}
+          >
+            <PortfolioImage
+              src={isDarkMode ? "/logo-removebg-preview.png" : "/logo-dark.png"}
+              alt="Portfolio"
+              $isDark={isDarkMode}
+            />
+            
+          </PortfolioLink>
+        </PortfolioFooter>
       </AppContainer>
     </>
   );
