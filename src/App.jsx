@@ -295,7 +295,7 @@ export default function App() {
         
         <PortfolioFooter>
           <PortfolioLink
-            href="https://ameyamhatre.vercel.app/"
+            // href="https://ameyamhatre.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
             $isDark={isDarkMode}
